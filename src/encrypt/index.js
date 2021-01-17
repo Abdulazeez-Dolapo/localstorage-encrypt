@@ -33,4 +33,20 @@ const encrypt = data => {
 	}
 }
 
-module.exports = { encrypt }
+const decrypt = data => {
+	try {
+		if (!data || typeof data !== "string") {
+			return "Enter valid data for decryption"
+		}
+
+		const decipher = createDecipher(ALGORITHM, newKey)
+		let result = decipher.update(data, "base64", "utf8")
+		result += decipher.final("utf8")
+
+		return JSON.parse(result)
+	} catch (error) {
+		return error
+	}
+}
+
+module.exports = { encrypt, decrypt }
