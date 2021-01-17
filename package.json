@@ -1,0 +1,24 @@
+{
+	"name": "localstorage-encrypt",
+	"version": "0.0.1",
+	"description": "A library to help you encrypt data before storing in local storage",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Abdulazeez-Dolapo/localstorage-encrypt.git"
+	},
+	"keywords": [
+		"local storage",
+		"security",
+		"browser"
+	],
+	"author": "Abdulazeez Dolapo Abdulrafiu <abdulrafiua10@gmail.com>",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/Abdulazeez-Dolapo/localstorage-encrypt/issues"
+	},
+	"homepage": "https://github.com/Abdulazeez-Dolapo/localstorage-encrypt#readme"
+}
