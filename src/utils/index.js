@@ -1,4 +1,8 @@
-const checkDataExpiry = (data = {}) => {
+/**
+ * Function to check expiry status of data in the localStorage
+ * @param data: object
+ */
+const checkExpiryDate = (data = {}) => {
 	if (!data?.expiryDate) return false
 
 	const date = new Date().getTime()
@@ -9,8 +13,11 @@ const checkDataExpiry = (data = {}) => {
 	return expired
 }
 
-// timeToExpire should be in hours
-const createDataExpiry = (timeToExpire = 24) => {
+/**
+ * Function to create expiry status of data in the localStorage
+ * @param timeToExpire: number in hours
+ */
+const createExpiryDate = (timeToExpire = 24) => {
 	const date = new Date().getTime()
 
 	if (typeof timeToExpire === "number") {
@@ -20,4 +27,4 @@ const createDataExpiry = (timeToExpire = 24) => {
 	}
 }
 
-module.exports = { checkDataExpiry, createDataExpiry }
+module.exports = { checkExpiryDate, createExpiryDate }

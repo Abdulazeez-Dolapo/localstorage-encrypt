@@ -11,6 +11,11 @@ class Crypto {
 		this.key = this.getNewKey(key, salt)
 	}
 
+	/**
+	 * Method to generate new key
+	 * @param key: string
+	 * @param salt: string
+	 */
 	getNewKey(key, salt) {
 		if (!key || !salt) {
 			return "Please enter a valid key and/or salt"
@@ -19,6 +24,10 @@ class Crypto {
 		return pbkdf2Sync(key, salt, 64, 64, HASH_TYPE).toString("base64")
 	}
 
+	/**
+	 * Method to encrypt data
+	 * @param data: object
+	 */
 	encrypt(data) {
 		try {
 			if (!data) {
@@ -41,6 +50,10 @@ class Crypto {
 		}
 	}
 
+	/**
+	 * Method to decrypt data
+	 * @param data: object
+	 */
 	decrypt(data) {
 		try {
 			if (!data || typeof data !== "string") {
