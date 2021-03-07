@@ -13,6 +13,10 @@ const checkExpiryDate = (data = {}) => {
 	return expired
 }
 
+const convertHoursToMilliseconds = timeInHours => {
+	return timeInHours * 60 * 60 * 1000
+}
+
 /**
  * Function to create expiry status of data in the localStorage
  * @param timeToExpire: number in hours
@@ -21,7 +25,7 @@ const createExpiryDate = timeToExpire => {
 	const date = new Date().getTime()
 
 	if (typeof timeToExpire === "number") {
-		const expiryDate = date + timeToExpire * 60 * 60 * 1000
+		const expiryDate = date + convertHoursToMilliseconds(timeToExpire)
 
 		return new Date(expiryDate)
 	}
