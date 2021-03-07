@@ -1,4 +1,4 @@
-const LocalStorage = require("../src/storage")
+const LocalStorage = require("./src/storage")
 
 const RANDOM_CHARACTERS = Math.random().toString(16).slice(2, -1)
 
@@ -13,11 +13,12 @@ const init = (
 	name = "localStorage",
 	key = RANDOM_CHARACTERS,
 	salt = RANDOM_CHARACTERS,
-	expire = 12
+	expire = 12,
+	ctx
 ) => {
-	const localStorage = new LocalStorage(key, salt, name, expire)
+	const localStorage = new LocalStorage(key, salt, name, expire, ctx)
 
 	return localStorage
 }
 
-module.exports = init
+exports.init = init
