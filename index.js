@@ -1,22 +1,13 @@
 const LocalStorage = require("./src/storage")
 
-const RANDOM_CHARACTERS = Math.random().toString(16).slice(2, -1)
-
 /**
  * Method to initialize the library
  * @param name: string
- * @param key: string
- * @param salt: string
  * @param expire: number
+ * @param ctx: the windows object
  */
-const init = (
-	name = "localStorage",
-	key = RANDOM_CHARACTERS,
-	salt = RANDOM_CHARACTERS,
-	expire = 12,
-	ctx
-) => {
-	const localStorage = new LocalStorage(key, salt, name, expire, ctx)
+const init = (name = "localStorage", expire = 12, ctx) => {
+	const localStorage = new LocalStorage(name, expire, ctx)
 
 	return localStorage
 }

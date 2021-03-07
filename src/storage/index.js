@@ -3,8 +3,8 @@ const { checkExpiryDate, createExpiryDate } = require("../utils")
 const Crypto = require("../crypto")
 
 class LocalStorage extends Crypto {
-	constructor(key, salt, name, expire, ctx) {
-		super(key, salt)
+	constructor(name, expire, ctx) {
+		super()
 
 		this.name = name
 		this.expire = expire

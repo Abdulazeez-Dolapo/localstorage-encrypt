@@ -5,10 +5,11 @@ const createDecipher = crypto.createDecipher
 
 const HASH_TYPE = "sha512"
 const ALGORITHM = "aes-256-cbc"
+const RANDOM_CHARACTERS = Math.random().toString(16).slice(2, -1)
 
 class Crypto {
-	constructor(key, salt) {
-		this.key = this.getNewKey(key, salt)
+	constructor() {
+		this.key = this.getNewKey(RANDOM_CHARACTERS, RANDOM_CHARACTERS)
 	}
 
 	/**
