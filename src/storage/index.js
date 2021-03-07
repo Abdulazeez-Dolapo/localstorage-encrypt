@@ -85,6 +85,10 @@ class LocalStorage extends Crypto {
 	 * Method to retrieve all items from the localStorage
 	 */
 	getAll() {
+		if (!this.localStorage.hasOwnProperty(this.name)) {
+			return "No data exist"
+		}
+
 		return this.getCurrentData()
 	}
 
