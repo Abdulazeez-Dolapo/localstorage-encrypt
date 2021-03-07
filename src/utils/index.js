@@ -3,7 +3,7 @@
  * @param data: object
  */
 const checkExpiryDate = (data = {}) => {
-	if (!data?.expiryDate) return false
+	if (!data.expiryDate) return false
 
 	const date = new Date().getTime()
 
