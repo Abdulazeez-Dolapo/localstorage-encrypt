@@ -17,7 +17,7 @@ const checkExpiryDate = (data = {}) => {
  * Function to create expiry status of data in the localStorage
  * @param timeToExpire: number in hours
  */
-const createExpiryDate = (timeToExpire = 24) => {
+const createExpiryDate = timeToExpire => {
 	const date = new Date().getTime()
 
 	if (typeof timeToExpire === "number") {
