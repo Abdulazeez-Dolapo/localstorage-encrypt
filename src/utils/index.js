@@ -1,16 +1,14 @@
 /**
  * Function to check expiry status of data in the localStorage
- * @param data: object
+ * @param expiryDate: string
  */
-const checkExpiryDate = (data = {}) => {
-	if (!data.expiryDate) return false
+const checkExpiryDate = expiryDate => {
+	if (!expiryDate) return false
 
-	const date = new Date().getTime()
+	const currentTime = new Date().getTime()
+	const expiryTime = new Date(expiryDate).getTime()
 
-	const expiryDate = new Date(data.expiryDate).getTime()
-
-	const expired = expiryDate <= date
-	return expired
+	return currentTime >= expiryTime
 }
 
 const convertHoursToMilliseconds = timeInHours => {

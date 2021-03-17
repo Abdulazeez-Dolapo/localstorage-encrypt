@@ -9,7 +9,8 @@ class LocalStorage extends Crypto {
 		this.name = name
 		this.expire = expire
 		this.localStorage = ctx.localStorage
-		this.window = ctx.window
+		this.window = ctx
+		this.expiryDate = createExpiryDate(expire)
 
 		this.initialize()
 	}
@@ -25,8 +26,10 @@ class LocalStorage extends Crypto {
 	 * Method to delete the current saved data if it has expired
 	 * @param value: object
 	 */
-	deleteIfExpired(value) {
-		if (!checkExpiryDate(this.decrypt(value))) {
+	deleteIfExpired() {
+		const isExpired = checkExpiryDate(this.expiryDate)
+
+		if (isExpired) {
 			this.localStorage.removeItem(this.name)
 		}
 	}
@@ -38,7 +41,7 @@ class LocalStorage extends Crypto {
 		this.window.addEventListener("storage", event => {
 			if (!event.storageArea || event.key !== this.name) return
 
-			this.deleteIfExpired(event.newValue)
+			this.deleteIfExpired()
 		})
 	}
 
@@ -46,17 +49,12 @@ class LocalStorage extends Crypto {
 	 * Method to initialize the library
 	 */
 	initialize() {
-		this.watchLocalStorage()
-
-		if (this.localStorage.hasOwnProperty(this.name)) {
-			this.deleteIfExpired(this.localStorage.getItem(this.name))
-		}
-
 		const encryptedValue = this.encrypt(
 			JSON.stringify({ expiryDate: createExpiryDate(this.expire) })
 		)
-
 		this.localStorage.setItem(this.name, encryptedValue)
+
+		// this.watchLocalStorage()
 	}
 
 	/**
@@ -101,6 +99,7 @@ class LocalStorage extends Crypto {
 		delete currentData[name]
 
 		const encryptedValue = this.encrypt(JSON.stringify(currentData))
+
 		this.localStorage.setItem(this.name, encryptedValue)
 	}
 
@@ -108,7 +107,8 @@ class LocalStorage extends Crypto {
 	 * Method to clear all saved data from the localStorage
 	 */
 	clear() {
-		this.localStorage.removeItem(this.name)
+		const encryptedValue = this.encrypt(JSON.stringify({}))
+		this.localStorage.setItem(this.name, encryptedValue)
 	}
 }
 

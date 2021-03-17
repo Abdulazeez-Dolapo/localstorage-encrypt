@@ -53,7 +53,7 @@ class Crypto {
 
 	/**
 	 * Method to decrypt data
-	 * @param data: object
+	 * @param data: string
 	 */
 	decrypt(data) {
 		try {
