@@ -19,7 +19,9 @@ class LocalStorage extends Crypto {
 	 * Method to get the current saved data
 	 */
 	getCurrentData() {
-		return this.decrypt(this.localStorage.getItem(this.name))
+		const currentData = this.decrypt(this.localStorage.getItem(this.name))
+		delete currentData.expiryDate
+		return currentData
 	}
 
 	/**
@@ -53,8 +55,6 @@ class LocalStorage extends Crypto {
 			JSON.stringify({ expiryDate: createExpiryDate(this.expire) })
 		)
 		this.localStorage.setItem(this.name, encryptedValue)
-
-		// this.watchLocalStorage()
 	}
 
 	/**
