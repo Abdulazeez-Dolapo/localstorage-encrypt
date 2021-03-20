@@ -18,8 +18,8 @@ class LocalStorage extends Crypto {
 	/**
 	 * Method to get the current saved data
 	 */
-	getCurrentData() {
-		const currentData = this.decrypt(this.localStorage.getItem(this.name))
+	_getCurrentData() {
+		const currentData = this._decrypt(this.localStorage.getItem(this.name))
 		delete currentData.expiryDate
 		return currentData
 	}
@@ -28,7 +28,7 @@ class LocalStorage extends Crypto {
 	 * Method to delete the current saved data if it has expired
 	 * @param value: object
 	 */
-	deleteIfExpired() {
+	_deleteIfExpired() {
 		const isExpired = checkExpiryDate(this.expiryDate)
 
 		if (isExpired) {
@@ -39,11 +39,11 @@ class LocalStorage extends Crypto {
 	/**
 	 * Method to watch data being saved to the browser's localStorage
 	 */
-	watchLocalStorage() {
+	_watchLocalStorage() {
 		this.window.addEventListener("storage", event => {
 			if (!event.storageArea || event.key !== this.name) return
 
-			this.deleteIfExpired()
+			this._deleteIfExpired()
 		})
 	}
 
@@ -51,7 +51,7 @@ class LocalStorage extends Crypto {
 	 * Method to initialize the library
 	 */
 	initialize() {
-		const encryptedValue = this.encrypt(
+		const encryptedValue = this._encrypt(
 			JSON.stringify({ expiryDate: createExpiryDate(this.expire) })
 		)
 		this.localStorage.setItem(this.name, encryptedValue)
@@ -63,10 +63,10 @@ class LocalStorage extends Crypto {
 	 * @param value: string
 	 */
 	save(name, value) {
-		const currentData = this.getCurrentData()
+		const currentData = this._getCurrentData()
 		currentData[name] = value
 
-		const encryptedValue = this.encrypt(JSON.stringify(currentData))
+		const encryptedValue = this._encrypt(JSON.stringify(currentData))
 		this.localStorage.setItem(this.name, encryptedValue)
 	}
 
@@ -75,7 +75,7 @@ class LocalStorage extends Crypto {
 	 * @param name: string
 	 */
 	get(name) {
-		const currentData = this.getCurrentData()
+		const currentData = this._getCurrentData()
 		return currentData[name]
 	}
 
@@ -87,7 +87,7 @@ class LocalStorage extends Crypto {
 			return "No data exist"
 		}
 
-		return this.getCurrentData()
+		return this._getCurrentData()
 	}
 
 	/**
@@ -95,10 +95,10 @@ class LocalStorage extends Crypto {
 	 * @param name: string
 	 */
 	remove(name) {
-		const currentData = this.getCurrentData()
+		const currentData = this._getCurrentData()
 		delete currentData[name]
 
-		const encryptedValue = this.encrypt(JSON.stringify(currentData))
+		const encryptedValue = this._encrypt(JSON.stringify(currentData))
 
 		this.localStorage.setItem(this.name, encryptedValue)
 	}
@@ -107,7 +107,7 @@ class LocalStorage extends Crypto {
 	 * Method to clear all saved data from the localStorage
 	 */
 	clear() {
-		const encryptedValue = this.encrypt(JSON.stringify({}))
+		const encryptedValue = this._encrypt(JSON.stringify({}))
 		this.localStorage.setItem(this.name, encryptedValue)
 	}
 }

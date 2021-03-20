@@ -9,7 +9,7 @@ const RANDOM_CHARACTERS = Math.random().toString(16).slice(2, -1)
 
 class Crypto {
 	constructor() {
-		this.key = this.getNewKey(RANDOM_CHARACTERS, RANDOM_CHARACTERS)
+		this._key = this._getNewKey(RANDOM_CHARACTERS, RANDOM_CHARACTERS)
 	}
 
 	/**
@@ -17,7 +17,7 @@ class Crypto {
 	 * @param key: string
 	 * @param salt: string
 	 */
-	getNewKey(key, salt) {
+	_getNewKey(key, salt) {
 		if (!key || !salt) {
 			return "Please enter a valid key and/or salt"
 		}
@@ -29,7 +29,7 @@ class Crypto {
 	 * Method to encrypt data
 	 * @param data: object
 	 */
-	encrypt(data) {
+	_encrypt(data) {
 		try {
 			if (!data) {
 				return "Enter valid data for encryption"
@@ -41,7 +41,7 @@ class Crypto {
 				dataToEncrypt = JSON.stringify(data)
 			}
 
-			const cipher = createCipher(ALGORITHM, this.key)
+			const cipher = createCipher(ALGORITHM, this._key)
 			let result = cipher.update(dataToEncrypt, "utf8", "base64")
 			result += cipher.final("base64")
 
@@ -55,13 +55,13 @@ class Crypto {
 	 * Method to decrypt data
 	 * @param data: string
 	 */
-	decrypt(data) {
+	_decrypt(data) {
 		try {
 			if (!data || typeof data !== "string") {
 				return "Enter valid data for decryption"
 			}
 
-			const decipher = createDecipher(ALGORITHM, this.key)
+			const decipher = createDecipher(ALGORITHM, this._key)
 			let result = decipher.update(data, "base64", "utf8")
 			result += decipher.final("utf8")
 
