@@ -20,25 +20,18 @@ yarn add localstorage-encrypt
 
 The library is initialized with 3 parameters:
 
-| name           | description                                                                                                                             | default      |
+| name           | Description                                                                                                                             | default      |
 | -------------- | --------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
 | name: string   | What you want to use as a key in the browser's local localstorage                                                                       | localStorage |
 | expire: number | How long you want the data saved before it is deleted. The unit is in hours.<br />**Note**: The functionality is still being worked on. | 12           |
-
-```
-| name      | Description | default |
-| ----------- | ----------- | ----------- |
-| name: string      | What you want to use as a key in the browser's local localstorage       | localStorage |
-| expire: number   | How long you want the data saved before it is deleted. The unit is in hours.<br />**Note**: The functionality is still being worked on.        | 12 |
-| window: object | The browser's window object | null |
-```
+| window: object | The browser's window object                                                                                                             | null         |
 
 ```javascript
 import localstorageEncrypt from "localstorage-encrypt"
 const ls = localstorageEncrypt.init("storage", 12, window)
 ```
 
-**Note**: when using the library in a React project, it is advisable to initialize it in a `useEffect` hook and in a Vue project, do it in the `created` lifecycle method. This way, the windows object doesn't return undefined. .
+**Note**: when using the library in a React project, it is advisable to initialize it in a `useEffect` hook and in a Vue project, do it in the `created` lifecycle method. This way, the `window` object is not undefined.
 
 ## Saving data
 
