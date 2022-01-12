@@ -3,23 +3,27 @@ const { checkExpiryDate, createExpiryDate } = require("../utils")
 const Crypto = require("../crypto")
 
 class LocalStorage extends Crypto {
+	#name
+	#localStorage
+	#window
+	#expiryDate
+
 	constructor(name, secretKey, expire) {
 		super(secretKey)
 
-		this.name = name
-		this.expire = expire
-		this.localStorage = globalThis.localStorage
-		this.window = globalThis
-		// this.expiryDate = createExpiryDate(expire)
+		this.#name = name
+		this.#localStorage = globalThis.localStorage
+		this.#window = globalThis
+		this.#expiryDate = createExpiryDate(expire)
 
-		this.initialize()
+		this.#initialize()
 	}
 
 	/**
 	 * Method to get the current saved data
 	 */
-	_getCurrentData() {
-		const currentData = this._decrypt(this.localStorage.getItem(this.name))
+	#getCurrentData() {
+		const currentData = this._decrypt(this.#localStorage.getItem(this.#name))
 		return currentData
 	}
 
@@ -27,35 +31,34 @@ class LocalStorage extends Crypto {
 	 * Method to delete the current saved data if it has expired
 	 * @param value: object
 	 */
-	_deleteIfExpired() {
-		const isExpired = checkExpiryDate(this.expiryDate)
+	#deleteIfExpired() {
+		const isExpired = checkExpiryDate(this.#expiryDate)
 
 		if (isExpired) {
-			this.localStorage.removeItem(this.name)
+			this.clear()
 		}
 	}
 
 	/**
 	 * Method to watch data being saved to the browser's localStorage
 	 */
-	_watchLocalStorage() {
-		this.window.addEventListener("storage", event => {
-			if (!event.storageArea || event.key !== this.name) return
+	#watchLocalStorage() {
+		this.#window.addEventListener("storage", event => {
+			if (!event.storageArea || event.key !== this.#name) return
 
-			this._deleteIfExpired()
+			this.#deleteIfExpired()
 		})
 	}
 
 	/**
 	 * Method to initialize the library
 	 */
-	initialize() {
+	#initialize() {
 		try {
-			if (typeof this.localStorage === "undefined") return
-			if (this.localStorage.hasOwnProperty(this.name)) return
+			if (typeof this.#localStorage === "undefined") return
+			if (this.#localStorage.hasOwnProperty(this.#name)) return
 
-			const encryptedData = this._encrypt(JSON.stringify({}))
-			this.localStorage.setItem(this.name, encryptedData)
+			this.clear()
 		} catch (error) {
 			throw new Error(error)
 		}
@@ -67,11 +70,11 @@ class LocalStorage extends Crypto {
 	 * @param value: string
 	 */
 	save(name, value) {
-		const currentData = this._getCurrentData()
+		const currentData = this.#getCurrentData()
 		currentData[name] = value
 
 		const encryptedValue = this._encrypt(JSON.stringify(currentData))
-		this.localStorage.setItem(this.name, encryptedValue)
+		this.#localStorage.setItem(this.#name, encryptedValue)
 	}
 
 	/**
@@ -80,7 +83,7 @@ class LocalStorage extends Crypto {
 	 * @return any || undefined
 	 */
 	get(name) {
-		const currentData = this._getCurrentData()
+		const currentData = this.#getCurrentData()
 
 		if (!currentData[name]) return
 		return currentData[name]
@@ -90,11 +93,11 @@ class LocalStorage extends Crypto {
 	 * Method to retrieve all items from the localStorage
 	 */
 	getAll() {
-		if (!this.localStorage.hasOwnProperty(this.name)) {
+		if (!this.#localStorage.hasOwnProperty(this.#name)) {
 			return "No data exist"
 		}
 
-		return this._getCurrentData()
+		return this.#getCurrentData()
 	}
 
 	/**
@@ -102,19 +105,19 @@ class LocalStorage extends Crypto {
 	 * @param name: string
 	 */
 	remove(name) {
-		const currentData = this._getCurrentData()
+		const currentData = this.#getCurrentData()
 		delete currentData[name]
 
 		const encryptedValue = this._encrypt(JSON.stringify(currentData))
-		this.localStorage.setItem(this.name, encryptedValue)
+		this.#localStorage.setItem(this.#name, encryptedValue)
 	}
 
 	/**
 	 * Method to clear all saved data from the localStorage
 	 */
 	clear() {
-		const encryptedValue = this._encrypt(JSON.stringify({}))
-		this.localStorage.setItem(this.name, encryptedValue)
+		const encryptedData = this._encrypt(JSON.stringify({}))
+		this.#localStorage.setItem(this.#name, encryptedData)
 	}
 }
 
