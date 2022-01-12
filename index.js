@@ -3,11 +3,11 @@ const LocalStorage = require("./src/storage")
 /**
  * Method to initialize the library
  * @param name: string
+ * @param secretKey: string
  * @param expire: number
- * @param ctx: the windows object
  */
-const init = (name = "localStorage", expire = 12, ctx) => {
-	const localStorage = new LocalStorage(name, expire, ctx)
+const init = (name = "localStorage", secretKey, expire = 12) => {
+	const localStorage = new LocalStorage(name, secretKey, expire)
 
 	return localStorage
 }

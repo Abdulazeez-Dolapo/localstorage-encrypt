@@ -3,14 +3,14 @@ const { checkExpiryDate, createExpiryDate } = require("../utils")
 const Crypto = require("../crypto")
 
 class LocalStorage extends Crypto {
-	constructor(name, expire, ctx) {
-		super()
+	constructor(name, secretKey, expire) {
+		super(secretKey)
 
 		this.name = name
 		this.expire = expire
-		this.localStorage = ctx.localStorage
-		this.window = ctx
-		this.expiryDate = createExpiryDate(expire)
+		this.localStorage = globalThis.localStorage
+		this.window = globalThis
+		// this.expiryDate = createExpiryDate(expire)
 
 		this.initialize()
 	}
@@ -20,7 +20,6 @@ class LocalStorage extends Crypto {
 	 */
 	_getCurrentData() {
 		const currentData = this._decrypt(this.localStorage.getItem(this.name))
-		delete currentData.expiryDate
 		return currentData
 	}
 
@@ -51,10 +50,15 @@ class LocalStorage extends Crypto {
 	 * Method to initialize the library
 	 */
 	initialize() {
-		const encryptedValue = this._encrypt(
-			JSON.stringify({ expiryDate: createExpiryDate(this.expire) })
-		)
-		this.localStorage.setItem(this.name, encryptedValue)
+		try {
+			if (typeof this.localStorage === "undefined") return
+			if (this.localStorage.hasOwnProperty(this.name)) return
+
+			const encryptedData = this._encrypt(JSON.stringify({}))
+			this.localStorage.setItem(this.name, encryptedData)
+		} catch (error) {
+			throw new Error(error)
+		}
 	}
 
 	/**
@@ -73,9 +77,12 @@ class LocalStorage extends Crypto {
 	/**
 	 * Method to retrieve an item from the localStorage
 	 * @param name: string
+	 * @return any || undefined
 	 */
 	get(name) {
 		const currentData = this._getCurrentData()
+
+		if (!currentData[name]) return
 		return currentData[name]
 	}
 
@@ -99,7 +106,6 @@ class LocalStorage extends Crypto {
 		delete currentData[name]
 
 		const encryptedValue = this._encrypt(JSON.stringify(currentData))
-
 		this.localStorage.setItem(this.name, encryptedValue)
 	}
 
