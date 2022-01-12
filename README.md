@@ -20,18 +20,16 @@ yarn add localstorage-encrypt
 
 The library is initialized with 3 parameters:
 
-| name           | Description                                                                                                                             | default      |
-| -------------- | --------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
-| name: string   | What you want to use as a key in the browser's local localstorage                                                                       | localStorage |
-| expire: number | How long you want the data saved before it is deleted. The unit is in hours.<br />**Note**: The functionality is still being worked on. | 12           |
-| window: object | The browser's window object                                                                                                             | null         |
+| name              | Description                                                                  | default      |
+| ----------------- | ---------------------------------------------------------------------------- | ------------ |
+| name: string      | What you want to use as a key in the browser's local localstorage            | localStorage |
+| secretKey: string | The personal secret key for encrypting your data.<br />required.             | null         |
+| expire: number    | How long you want the data saved before it is deleted. The unit is in hours. | 12           |
 
 ```javascript
 import localstorageEncrypt from "localstorage-encrypt"
-const ls = localstorageEncrypt.init("storage", 12, window)
+const ls = localstorageEncrypt.init("storage", "my-secret-key", 12)
 ```
-
-**Note**: when using the library in a React project, it is advisable to initialize it in a `useEffect` hook and in a Vue project, do it in the `created` lifecycle method. This way, the `window` object is not undefined.
 
 ## Saving data
 
@@ -76,7 +74,7 @@ ls.getAll()
 
 To delete a particular saved data.
 
-It takes a single parameter: the key you used to store the data. The key has to be of string type.
+It takes a single parameter: the key you used to store the data. The key is of type string.
 
 ```javascript
 ls.remove("authToken")
