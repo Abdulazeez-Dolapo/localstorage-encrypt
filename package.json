@@ -1,6 +1,6 @@
 {
 	"name": "localstorage-encrypt",
-	"version": "0.0.2",
+	"version": "0.1.0",
 	"description": "A library to help you encrypt data before storing in local storage",
 	"main": "index.js",
 	"scripts": {
