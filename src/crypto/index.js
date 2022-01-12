@@ -1,28 +1,8 @@
-const crypto = require("crypto")
-const pbkdf2Sync = crypto.pbkdf2Sync
-const createCipher = crypto.createCipher
-const createDecipher = crypto.createDecipher
-
-const HASH_TYPE = "sha512"
-const ALGORITHM = "aes-256-cbc"
-const RANDOM_CHARACTERS = Math.random().toString(16).slice(2, -1)
+const cryptoJs = require("crypto-js")
 
 class Crypto {
-	constructor() {
-		this._key = this._getNewKey(RANDOM_CHARACTERS, RANDOM_CHARACTERS)
-	}
-
-	/**
-	 * Method to generate new key
-	 * @param key: string
-	 * @param salt: string
-	 */
-	_getNewKey(key, salt) {
-		if (!key || !salt) {
-			return "Please enter a valid key and/or salt"
-		}
-
-		return pbkdf2Sync(key, salt, 64, 64, HASH_TYPE).toString("base64")
+	constructor(secret) {
+		this.secretKey = secret
 	}
 
 	/**
@@ -32,7 +12,7 @@ class Crypto {
 	_encrypt(data) {
 		try {
 			if (!data) {
-				return "Enter valid data for encryption"
+				throw new Error("Enter valid data for encryption")
 			}
 
 			let dataToEncrypt = data
@@ -41,33 +21,33 @@ class Crypto {
 				dataToEncrypt = JSON.stringify(data)
 			}
 
-			const cipher = createCipher(ALGORITHM, this._key)
-			let result = cipher.update(dataToEncrypt, "utf8", "base64")
-			result += cipher.final("base64")
+			const result = cryptoJs.AES.encrypt(
+				dataToEncrypt,
+				this.secretKey
+			).toString()
 
 			return result
 		} catch (error) {
-			return error
+			throw new Error(error)
 		}
 	}
 
 	/**
 	 * Method to decrypt data
-	 * @param data: string
+	 * @param cipherText: string
 	 */
-	_decrypt(data) {
+	_decrypt(cipherText) {
 		try {
-			if (!data || typeof data !== "string") {
-				return "Enter valid data for decryption"
+			if (!cipherText || typeof cipherText !== "string") {
+				throw new Error("Enter valid data for decryption")
 			}
 
-			const decipher = createDecipher(ALGORITHM, this._key)
-			let result = decipher.update(data, "base64", "utf8")
-			result += decipher.final("utf8")
+			const bytes = cryptoJs.AES.decrypt(cipherText, this.secretKey)
+			const decryptedData = JSON.parse(bytes.toString(cryptoJs.enc.Utf8))
 
-			return JSON.parse(result)
+			return decryptedData
 		} catch (error) {
-			return error
+			throw new Error(error)
 		}
 	}
 }

@@ -20,5 +20,8 @@
 	"bugs": {
 		"url": "https://github.com/Abdulazeez-Dolapo/localstorage-encrypt/issues"
 	},
-	"homepage": "https://github.com/Abdulazeez-Dolapo/localstorage-encrypt#readme"
+	"homepage": "https://github.com/Abdulazeez-Dolapo/localstorage-encrypt#readme",
+	"dependencies": {
+		"crypto-js": "^4.1.1"
+	}
 }
