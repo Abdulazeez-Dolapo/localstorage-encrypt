@@ -48,7 +48,7 @@ class LocalStorage extends Crypto {
 		if (typeof this.#localStorage === "undefined") return
 
 		this.#window.addEventListener("storage", event => {
-			if (!event.storageArea) return
+			if (!event.storageArea || event.key !== this.name) return
 
 			this.#deleteIfExpired()
 		})
