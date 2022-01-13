@@ -1,4 +1,5 @@
 const cryptoJs = require("crypto-js")
+const { isJson } = require("../utils")
 
 class Crypto {
 	#secretKey
@@ -10,7 +11,7 @@ class Crypto {
 	/**
 	 * Method to encrypt data
 	 * @param data: any
-	 * @return string
+	 * @return void
 	 */
 	_encrypt(data) {
 		try {
@@ -38,7 +39,7 @@ class Crypto {
 	/**
 	 * Method to decrypt data
 	 * @param cipherText: string
-	 * @return any
+	 * @return string
 	 */
 	_decrypt(cipherText) {
 		try {
@@ -47,9 +48,11 @@ class Crypto {
 			}
 
 			const bytes = cryptoJs.AES.decrypt(cipherText, this.#secretKey)
-			const decryptedData = JSON.parse(bytes.toString(cryptoJs.enc.Utf8))
+			const decryptedData = bytes.toString(cryptoJs.enc.Utf8)
 
-			return decryptedData
+			return isJson(decryptedData)
+				? JSON.parse(decryptedData)
+				: decryptedData
 		} catch (error) {
 			throw new Error(error)
 		}

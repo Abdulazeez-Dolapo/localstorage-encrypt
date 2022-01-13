@@ -39,4 +39,25 @@ const createExpiryDate = timeToExpire => {
 	return expiryDate
 }
 
-module.exports = { checkExpiryDate, createExpiryDate }
+/**
+ * Method to check if an item is a valid stringified JSON
+ * @param item: any
+ * @return boolean
+ */
+const isJson = item => {
+	item = typeof item !== "string" ? JSON.stringify(item) : item
+
+	try {
+		item = JSON.parse(item)
+	} catch (e) {
+		return false
+	}
+
+	if (typeof item === "object" && item !== null) {
+		return true
+	}
+
+	return false
+}
+
+module.exports = { checkExpiryDate, createExpiryDate, isJson }
