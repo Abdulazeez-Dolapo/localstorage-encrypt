@@ -121,12 +121,20 @@ class LocalStorage extends Crypto {
 	}
 
 	/**
-	 * Method to clear all saved data from the localStorage
+	 * Method to clear all saved data from the localStorage and reset to an empty object
 	 * @return void
 	 */
 	clear() {
 		const encryptedData = this._encrypt(JSON.stringify({}))
 		this.#localStorage.setItem(this.#name, encryptedData)
+	}
+
+	/**
+	 * Method to completely deactivate the library and remove all saved data from the localStorage
+	 * @return void
+	 */
+	deactivate() {
+		this.#localStorage.removeItem(this.#name)
 	}
 }
 
