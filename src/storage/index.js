@@ -148,7 +148,8 @@ class LocalStorage extends Crypto {
 	}
 
 	/**
-	 * Method to completely deactivate the library and remove all saved data from the localStorage
+	 * Method to completely deactivate the library -
+	 * remove all saved data from the localStorage and remove event listener that handles expiry date functionality.
 	 * @return void
 	 */
 	deactivate() {

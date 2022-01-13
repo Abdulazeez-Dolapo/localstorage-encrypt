@@ -84,10 +84,22 @@ ls.remove("authToken")
 
 ## Delete all saved data
 
-To delete every data that has been saved so far. This could be useful in a case where a user clicks logout and you want to remove all it's data.
+To delete every data that has been saved so far. This could be useful in a case where you want to completely reset your project state. For example, after a user has finished shopping and checked out but still remains logged in.
 
 ```javascript
 ls.clear()
 // clears every data from the storage. only an empty object {} remains.
+// Has no return value
+```
+
+## Deactivate
+
+Unlike the `clear` method that resets the saved data into an empty object, the `deactivate` method completely removes the saved data from the local storage and also removes the event listener that was implemented to check for the expiry of the saved data.
+
+This could be very useful in the implementation of a logout feature for your project.
+
+```javascript
+ls.deactivate()
+// Completely removes the encrypted string from the local storage
 // Has no return value
 ```
