@@ -25,8 +25,15 @@ class LocalStorage extends Crypto {
 	 * @return current saved data: object
 	 */
 	#getCurrentData() {
-		const currentData = this._decrypt(this.#localStorage.getItem(this.#name))
-		return currentData
+		try {
+			const currentData = this._decrypt(
+				this.#localStorage.getItem(this.#name)
+			)
+
+			return typeof currentData === "object" ? currentData : {}
+		} catch (error) {
+			return {}
+		}
 	}
 
 	/**
@@ -41,7 +48,6 @@ class LocalStorage extends Crypto {
 	}
 
 	#storageEventListener(event) {
-		console.log("event listener called")
 		if (!event.storageArea || event.key !== this.name) return
 
 		this.#deleteIfExpired()
@@ -64,8 +70,17 @@ class LocalStorage extends Crypto {
 	#initialize() {
 		try {
 			if (typeof this.#localStorage === "undefined") return
-			if (this.#localStorage.hasOwnProperty(this.#name)) return
+			if (!this.#localStorage.hasOwnProperty(this.#name)) {
+				return this.clear()
+			}
 
+			const decryptedData = this._decrypt(
+				this.#localStorage.getItem(this.#name)
+			)
+
+			if (typeof decryptedData === "object") return
+
+			this.deactivate()
 			this.clear()
 		} catch (error) {
 			throw new Error(error)
