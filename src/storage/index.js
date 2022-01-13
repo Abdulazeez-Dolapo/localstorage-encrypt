@@ -40,6 +40,13 @@ class LocalStorage extends Crypto {
 		if (isExpired) this.clear()
 	}
 
+	#storageEventListener(event) {
+		console.log("event listener called")
+		if (!event.storageArea || event.key !== this.name) return
+
+		this.#deleteIfExpired()
+	}
+
 	/**
 	 * Method to handle data expiry based on the time set
 	 * @return void
@@ -47,11 +54,7 @@ class LocalStorage extends Crypto {
 	#watchLocalStorage() {
 		if (typeof this.#localStorage === "undefined") return
 
-		this.#window.addEventListener("storage", event => {
-			if (!event.storageArea || event.key !== this.name) return
-
-			this.#deleteIfExpired()
-		})
+		this.#window.addEventListener("storage", this.#storageEventListener)
 	}
 
 	/**
@@ -71,13 +74,13 @@ class LocalStorage extends Crypto {
 
 	/**
 	 * Method to save an item to the localStorage
-	 * @param name: string
+	 * @param key: string
 	 * @param value: string
 	 * @return void
 	 */
-	save(name, value) {
+	save(key, value) {
 		const currentData = this.#getCurrentData()
-		currentData[name] = value
+		currentData[key] = value
 
 		const encryptedValue = this._encrypt(JSON.stringify(currentData))
 		this.#localStorage.setItem(this.#name, encryptedValue)
@@ -85,14 +88,14 @@ class LocalStorage extends Crypto {
 
 	/**
 	 * Method to retrieve an item from the localStorage
-	 * @param name: string
+	 * @param key: string
 	 * @return any || undefined
 	 */
-	get(name) {
+	get(key) {
 		const currentData = this.#getCurrentData()
 
-		if (!currentData[name]) return
-		return currentData[name]
+		if (!currentData[key]) return
+		return currentData[key]
 	}
 
 	/**
@@ -109,12 +112,12 @@ class LocalStorage extends Crypto {
 
 	/**
 	 * Method to delete an item from the localStorage
-	 * @param name: string
+	 * @param key: string
 	 * @return void
 	 */
-	remove(name) {
+	remove(key) {
 		const currentData = this.#getCurrentData()
-		delete currentData[name]
+		delete currentData[key]
 
 		const encryptedValue = this._encrypt(JSON.stringify(currentData))
 		this.#localStorage.setItem(this.#name, encryptedValue)
@@ -134,7 +137,10 @@ class LocalStorage extends Crypto {
 	 * @return void
 	 */
 	deactivate() {
+		if (typeof this.#localStorage === "undefined") return
+
 		this.#localStorage.removeItem(this.#name)
+		this.#window.removeEventListener("storage", this.#storageEventListener)
 	}
 }
 
